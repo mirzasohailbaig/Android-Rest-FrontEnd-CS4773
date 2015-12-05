@@ -8,23 +8,23 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import retrofit.Call;
 import retrofit.Callback;
 import retrofit.Response;
 import retrofit.Retrofit;
 import sohail_login.login_node.API.ApiInterface;
-import sohail_login.login_node.API.InitDeletion;
+import sohail_login.login_node.API.ChangePassword;
 import sohail_login.login_node.API.RestClient;
 
 
 public class LoginActivity extends Activity {
 
-    EditText email,password,res_email,code,newpass;
-    Button InitDeletetion,cont,cont_code,cancel,cancel1,register,forpass;
-    String emailtxt, passwordtxt,email_res_txt,code_txt,npass_txt;
+    EditText email,password;
+    Button Login,register;
+    String emailtxt, passwordtxt;
 
-    Dialog reset;
 
 
     @Override
@@ -39,9 +39,8 @@ public class LoginActivity extends Activity {
         password = (EditText)findViewById(R.id.ID);
 
         //Buttons
-        InitDeletetion = (Button)findViewById(R.id.InitDeletebtn);
+        Login = (Button)findViewById(R.id.InitDeletebtn);
         register = (Button)findViewById(R.id.register);
-        forpass = (Button)findViewById(R.id.forgotpass);
 
         //Register Onclick
         register.setOnClickListener(new View.OnClickListener() {
@@ -54,35 +53,29 @@ public class LoginActivity extends Activity {
         });
 
         //Login Onclick
-        InitDeletetion.setOnClickListener(new View.OnClickListener() {
-
+        Login.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
+                //data
                 emailtxt = email.getText().toString();
                 passwordtxt = password.getText().toString();
-                System.out.println("reached here");
 
-                Call<InitDeletion> call = service.INIT_DELETION_CALL(emailtxt, passwordtxt);
-
+                Call<ChangePassword> call = service.CHANGE_PASSWORD_CALL(emailtxt, passwordtxt, passwordtxt);
                 //Asynchronous Request
-                call.enqueue(new Callback<InitDeletion>() {
+                call.enqueue(new Callback<ChangePassword>() {
                     @Override
-                    public void onResponse(Response<InitDeletion> response, Retrofit retrofit) {
-                        Log.d("Keys", "values = " + emailtxt);
-                        Log.d("Keys", "values = " + passwordtxt);
-                        Log.d("LoginActivity", "Status Code = " + response.code());
-                        Log.d("LoginActivity", "Status message = " + response.message());
+                    public void onResponse(Response<ChangePassword> response, Retrofit retrofit) {
+                        Log.d("Keys", "email = " + emailtxt);
+                        Log.d("Keys", "password = " + passwordtxt);
                         if (response.isSuccess()) {
                             // request successful (status code 200)
-                            InitDeletion result = response.body();
-                            Log.d("LoginActivity", "Success Code = " + response.code());
-                            Log.d("LoginActivity", "Status message = " + response.body());
+                            email.setText("");
+                            password.setText("");
+                            Toast.makeText(LoginActivity.this, "Success Code = " + response.code() +": "+response.message(), Toast.LENGTH_SHORT).show();
                         } else {
-                            // response received but request not successful (like 400,401,403 etc)
                             //Handle errors
-                            Log.d("LoginActivity", "fail Code = " + response.code());
-                            Log.d("LoginActivity", "Status message = " + response.body());
+                            Toast.makeText(LoginActivity.this, "Failure Code = " + response.code() +": "+response.message(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -91,35 +84,6 @@ public class LoginActivity extends Activity {
                         Log.d("LoginActivity", "failed: " + t);
                     }
                 });
-            }
-        });
-        //ForgotPass Onclick
-        forpass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                reset = new Dialog(LoginActivity.this);
-                reset.setTitle("Reset Password");
-                reset.setContentView(R.layout.reset_pass_init);
-                cont = (Button) reset.findViewById(R.id.resbtn);
-                cancel = (Button) reset.findViewById(R.id.cancelbtn);
-                cancel.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        reset.dismiss();
-                    }
-                });
-                res_email = (EditText) reset.findViewById(R.id.email);
-
-                cont.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        email_res_txt = res_email.getText().toString();
-
-                    }
-                });
-
-
-                reset.show();
             }
         });
     }

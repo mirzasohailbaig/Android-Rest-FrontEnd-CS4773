@@ -48,7 +48,7 @@
                 android:background="@drawable/btn_back"
                 android:textColor="#ffffff"
                 android:textAlignment="center"
-                android:text="I-Delete"/>
+                android:text="Login"/>
 
             <Button
                 android:layout_width="match_parent"
@@ -60,18 +60,6 @@
                 android:textAlignment="center"
                 android:text="Register"
             />
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:id="@+id/forgotpass"
-                android:background="@drawable/btn_red_back"
-                android:textColor="#ffffff"
-                android:textAlignment="center"
-                android:text="Forgot Password"
-             />
-
        </LinearLayout>
     </ScrollView>
 
